@@ -30,6 +30,8 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         BestScore.text = $"Best score: {ScoreManager.Instance.GetBestPlayer()}: {ScoreManager.Instance.GetBestScore()}";
+        ScoreManager.Instance.ResetInstanceScore();
+        ScoreText.text = $"Score : {ScoreManager.Instance.GetInstanceScore()}";
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         int[] pointCountArray = new [] {1,1,2,2,5,5};
@@ -61,29 +63,23 @@ public class MainManager : MonoBehaviour
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
-        else if (m_GameOver)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                m_GameOver = false;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-        }
+
     }
 
     void AddPoint(int point)
     {
-        m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+
+        ScoreManager.Instance.SetInstanceScore(point);
+        ScoreText.text = $"Score : {ScoreManager.Instance.GetInstanceScore()}";
 
     }
 
     public void GameOver()
     {
         m_GameOver = true;
-        ScoreManager.Instance.AddNewScore(m_Points);
-       
-        GameOverText.SetActive(true);
+        ScoreManager.Instance.AddNewScore();
+        ScoreManager.Instance.LoadScoreTable();
+        SceneManager.LoadScene(2);
     }
 
 

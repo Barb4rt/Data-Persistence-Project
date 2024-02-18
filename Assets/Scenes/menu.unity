@@ -2726,10 +2726,10 @@ RectTransform:
   - {fileID: 997694058}
   m_Father: {fileID: 2108334914}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.43100002, y: 0.39645988}
-  m_AnchorMax: {x: 0.569753, y: 0.57000005}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.5, y: -12}
+  m_SizeDelta: {x: 185, y: 126}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2108334909
 GameObject:
@@ -2763,6 +2763,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 285a2c4512eb630479189630596d802f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputField: {fileID: 667040732}
+  errorColor: {r: 1, g: 0, b: 0, a: 1}
+  originalImageColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &2108334911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2852,8 +2855,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 1282146947}
   - {fileID: 223122771}
+  - {fileID: 967489563}
   - {fileID: 2108334914}
   - {fileID: 186740470}
   - {fileID: 926445938}
   - {fileID: 1565453213}
-  - {fileID: 967489563}

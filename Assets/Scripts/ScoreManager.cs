@@ -13,6 +13,7 @@ public class ScoreManager : MonoBehaviour
     private int _BestScore;
     private string _BestScorePlayer;
     private List<Score> _ScoreTable;
+    private int _instanceScore = 0;
     private void Awake()
     {
         if (Instance != null)
@@ -34,7 +35,19 @@ public class ScoreManager : MonoBehaviour
     {
         return _PlayerName;
     }
+    public void ResetInstanceScore()
+    {
+        _instanceScore= 0;
+    }
+    public void SetInstanceScore(int points)
+    {
+       _instanceScore += points;
+    }
 
+    public int GetInstanceScore()
+    {
+      return  _instanceScore;
+    }
     public int GetBestScore()
     {
         return _ScoreTable[0].ScoreValue;
@@ -60,11 +73,11 @@ public class ScoreManager : MonoBehaviour
         SaveBestScore();
 
     }
-    public void AddNewScore(int newScoreValue)
+    public void AddNewScore()
     {
         Score newScore = new Score
         {
-            ScoreValue = newScoreValue,
+            ScoreValue = _instanceScore,
             ScorePlayerName = _PlayerName
         };
         _ScoreTable.Add(newScore);
@@ -88,7 +101,6 @@ public class ScoreManager : MonoBehaviour
             string json = File.ReadAllText(path);
             ScoreTable data = JsonUtility.FromJson<ScoreTable>(json);
             print(data.ScoreTableList);
-            // Affichage des scores (pour vérification)
             foreach (var score in data.ScoreTableList)
             {
                 print("Best Score: " + score.ScoreValue + " | Player Name: " + score.ScorePlayerName);
