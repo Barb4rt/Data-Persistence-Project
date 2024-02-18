@@ -4,23 +4,30 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class ScoreList : MonoBehaviour
 {
     public GameObject ItemPrefab;
     public string[] itemTexts;
-    // Start is called before the first frame update
+    
+    
+    
     void Start()
     {
-        for (int i = 0; i < 6; i++)
+      List<Score> scores = ScoreManager.Instance.GetScoreList();
+    List<Score> topScores = scores.GetRange(0, Mathf.Min(10, scores.Count));
+        for (int i = 0; i < topScores.Count; i++)
         {
             GameObject obj = Instantiate(ItemPrefab);
             obj.transform.parent = transform;
             TextMeshProUGUI index = obj.transform.Find("Index").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI playerName = obj.transform.Find("PlayerName").GetComponent<TextMeshProUGUI>();
-            if (index != null)
+            TextMeshProUGUI scoreText = obj.transform.Find("Score").GetComponent<TextMeshProUGUI>();
+            if (index && playerName && scoreText)
             {
-                // Modifier le texte comme souhaité
-                index.text = (i+1).ToString();
+                index.text = (i + 1).ToString();
+                playerName.text = topScores[i].ScorePlayerName; 
+                scoreText.text = topScores[i].ScoreValue.ToString();
             }
             else
             {

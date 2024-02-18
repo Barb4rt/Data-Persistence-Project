@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -36,26 +37,21 @@ public class ScoreManager : MonoBehaviour
 
     public int GetBestScore()
     {
-        return _BestScore;
+        return _ScoreTable[0].ScoreValue;
     }
 
     public string GetBestPlayer()
     {
-        return _BestScorePlayer;
-    }
-    [System.Serializable]
-    class Score
-    {
-        public int BestScore;
-        public string BestScorePlayerName;
-
+        return _ScoreTable[0].ScorePlayerName;
     }
 
-[System.Serializable]
-    class ScoreData
+    public List<Score> GetScoreList()
     {
-        public List<Score> ScoreTable;
+
+        return _ScoreTable;
+       
     }
+
 
     public void NewHighScore ( int newScore)
     {
@@ -64,35 +60,51 @@ public class ScoreManager : MonoBehaviour
         SaveBestScore();
 
     }
-    private void SaveBestScore()
+    public void AddNewScore(int newScoreValue)
     {
-        Score data = new Score();
-
-        data.BestScore = _BestScore;
-        data.BestScorePlayerName = _BestScorePlayer;
-        string json = JsonUtility.ToJson(data);
+        Score newScore = new Score
+        {
+            ScoreValue = newScoreValue,
+            ScorePlayerName = _PlayerName
+        };
+        _ScoreTable.Add(newScore);
+        _ScoreTable = _ScoreTable.OrderByDescending(score => score.ScoreValue).ToList();
+        _ScoreTable = _ScoreTable.Take(10).ToList();
+        string json = JsonUtility.ToJson(new ScoreTable { ScoreTableList = _ScoreTable });
         File.WriteAllText(Application.persistentDataPath + "/bestscore.json", json);
     }
-    private void LoadScoreTable()
+    private void SaveBestScore()
+    {
+        List<Score> sortedScores = _ScoreTable.OrderByDescending(score => score.ScoreValue).ToList();
+        List<Score> topScores = sortedScores.Take(10).ToList();
+        string json = JsonUtility.ToJson(new ScoreTable { ScoreTableList = topScores });
+        File.WriteAllText(Application.persistentDataPath + "/bestscore.json", json);
+    }
+    public void LoadScoreTable()
     {
         string path = Application.persistentDataPath + "/bestscore.json";
         if (File.Exists(path))
-        { 
-        string json = File.ReadAllText(path);
-            ScoreData data = JsonUtility.FromJson<ScoreData>(json);
+        {
+            string json = File.ReadAllText(path);
+            ScoreTable data = JsonUtility.FromJson<ScoreTable>(json);
+            print(data.ScoreTableList);
+            // Affichage des scores (pour vérification)
+            foreach (var score in data.ScoreTableList)
+            {
+                print("Best Score: " + score.ScoreValue + " | Player Name: " + score.ScorePlayerName);
+            }
             if (data != null)
             {
-               
-                _ScoreTable = data.ScoreTable;
+                _ScoreTable = data.ScoreTableList;
             }
 
-            foreach (var score in _ScoreTable)
-            {
-                print(score.BestScore);
-            }
         }
+        else
+        {
+            Debug.LogWarning("Le fichier de score n'existe pas.");
+        }
+    }
 
-        }
     public void LoadBestScore()
     {
         string path = Application.persistentDataPath + "/bestscore.json";
@@ -102,8 +114,8 @@ public class ScoreManager : MonoBehaviour
             Score data = JsonUtility.FromJson<Score>(json);
             if (data != null)
             {
-                _BestScore = data.BestScore;
-                _BestScorePlayer = data.BestScorePlayerName;
+                _BestScore = data.ScoreValue;
+                _BestScorePlayer = data.ScorePlayerName;
                 
             }
         }

@@ -81,11 +81,8 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         m_GameOver = true;
-        if (m_Points > ScoreManager.Instance.GetBestScore())
-        {
-            BestScore.text = $"Best score: {ScoreManager.Instance.GetPlayerName()}: {m_Points} ";
-            ScoreManager.Instance.NewHighScore(m_Points);
-        }
+        ScoreManager.Instance.AddNewScore(m_Points);
+       
         GameOverText.SetActive(true);
     }
 
